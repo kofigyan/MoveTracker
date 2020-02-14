@@ -17,7 +17,7 @@ between previous and current locations less than 1 meter.
  
 
 #### AllEventsActivity
-Show a list of all past traking events.
+Show a list of all past tracking events.
  
 
 ### Building
