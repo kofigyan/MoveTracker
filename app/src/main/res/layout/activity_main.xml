@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="com.kofigyan.movetracker.model.EventState" />
+
+        <variable
+            name="viewmodel"
+            type="com.kofigyan.movetracker.viewmodel.LocationViewModel" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.MainActivity">
+
+        <TextView
+            android:id="@+id/current_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/btnLocationTracking"
+            android:layout_centerHorizontal="true"
+            android:text="@{String.valueOf(viewmodel.locationUpdate) }"
+            android:textSize="25sp"
+            app:visibleGone="@{viewmodel.locationUpdate}" />
+
+
+        <TextView
+            android:id="@+id/btnLocationTracking"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/rounded_button_margin_top"
+            android:background="@drawable/rounded_button_bg"
+            android:enabled="true"
+            android:gravity="center"
+            android:onClick="@{() -> viewmodel.respondToTrackingAction()}"
+            android:text="@{viewmodel.eventState.message }"
+            android:textColor="#FFFFFF"
+            android:textSize="@dimen/rounded_button_text_size" />
+
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnViewAllEvents"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/event_button_height"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="@dimen/event_button_margin"
+            android:layout_marginRight="@dimen/event_button_margin"
+            android:layout_marginBottom="@dimen/default_button_margin"
+            android:text="@string/btn_text_view_all_events"
+            android:textColor="#ffffff"
+            app:backgroundTint="@color/view_all_background"
+            app:visibleGone="@{viewmodel.eventState.state != EventState.STARTED}" />
+
+    </RelativeLayout>
+
+</layout>

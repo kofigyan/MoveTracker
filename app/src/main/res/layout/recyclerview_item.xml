@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+       <variable
+           name="eventWithLocations"
+           type="com.kofigyan.movetracker.model.EventWithLocations" />
+    </data>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_margin="@dimen/default_button_margin"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/ivMovementPath"
+            android:layout_width="@dimen/static_map_size"
+            android:layout_height="@dimen/static_map_size" />
+
+        <TextView
+            android:id="@+id/tvDateCreated"
+            android:gravity="center"
+            android:textSize="@dimen/item_date_size"
+            android:textColor="@android:color/background_light"
+            android:layout_gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+</layout>
