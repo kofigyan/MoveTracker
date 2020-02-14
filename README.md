@@ -17,8 +17,8 @@ between previous and current locations less than 1 meter.
  
 
 #### AllEventsActivity
-Showa a list of all past traking events.
-#### ReviewDetailActivity 
+Show a list of all past traking events.
+ 
 
 ### Building
 You can open the project in Android studio and press run.
@@ -43,14 +43,17 @@ The projects will use Espresso for UI testing.
 * [mockito][mockito] for mocking in tests
 * [threetenabp][threetenabp] for timezone format
 * [FusedLocationProviderClient][fuse] fuse location provider
+* [static map][map] static map api
 
 
 [extension-lib]: https://developer.android.com/jetpack/androidx
+[arch]: https://developer.android.com/topic/libraries/architecture
 [espresso]: https://google.github.io/android-testing-support-library/docs/espresso/
 [retrofit]: http://square.github.io/retrofit
 [glide]: https://github.com/bumptech/glide
 [mockito]: http://site.mockito.org
 [threetenabp]: https://github.com/JakeWharton/ThreeTenABP
 [fuse]: https://developers.google.com/android/reference/com/google/android/gms/location/FusedLocationProviderClient
+[map]: https://developers.google.com/maps/documentation/maps-static/intro
 
  
