@@ -20,7 +20,7 @@ class LocationEventAdapter internal constructor(
     LocationEventDiffCallback()
 ) {
 
-    class LocationEventViewHolder constructor(val binding: RecyclerviewItemBinding) :
+    class LocationEventViewHolder constructor(private val binding: RecyclerviewItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: EventWithLocations, context: Context) {
