@@ -11,13 +11,13 @@ Introduction
 The app is composed of 2 main screens.
 #### MainActivity
 Allows the user to start and stop tracking of movement.
-The app allows the user to turn-off the screen while tracking and this does 
+The user can turn-off the screen while tracking and this does 
 not affect the functionality of the app. Tracking is ignored for distances  
 between previous and current locations less than 1 meter.
  
 
 #### AllEventsActivity
-Show a list of all past tracking events.
+Shows a list of all past tracking events.
  
 
 ### Building
