@@ -18,7 +18,7 @@ class NonNullPermissionStatusLiveData(context: Context) : PermissionStatusLiveDa
 
                 when(status){
                     is Granted -> return
-                    is Denied ->  observer.onNewMessage(status)
+                    is Denied ->  observer.onNewMessage()
                 }
 
             }
@@ -26,11 +26,8 @@ class NonNullPermissionStatusLiveData(context: Context) : PermissionStatusLiveDa
     }
 
     interface PermissionStatusObserver {
-        /**
-         * Called when there is a new message to be shown.
-         * @param status The new message, non-null.
-         */
-        fun onNewMessage(status: PermissionStatus)
+
+        fun onNewMessage()
     }
 
 

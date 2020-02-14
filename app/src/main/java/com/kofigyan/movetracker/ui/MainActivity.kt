@@ -119,14 +119,14 @@ class MainActivity : BaseActivity<LocationViewModel,ActivityMainBinding>() {
         }
     }
 
-    private val gpsStatusMessageObserver = object : NonNullGpaStatusLiveData.GpsStatusMessageObserver {
-        override fun onNewMessage(dialogMessage: GpsStatus) {
+    private val gpsStatusMessageObserver = object : NonNullGpsStatusLiveData.GpsStatusMessageObserver {
+        override fun onNewMessage() {
             showGpsNotEnabledDialog()
         }
     }
 
     private val locationPermissionObserver = object : NonNullPermissionStatusLiveData.PermissionStatusObserver {
-        override fun onNewMessage(status: PermissionStatus) {
+        override fun onNewMessage() {
             showLocationPermissionNeededDialog()
         }
     }

@@ -41,7 +41,7 @@ class LocationViewModel @Inject constructor(
 
     val permissionStatusLiveData = NonNullPermissionStatusLiveData(application)
 
-    val gpsStatusLiveData = NonNullGpaStatusLiveData(application)
+    val gpsStatusLiveData = NonNullGpsStatusLiveData(application)
 
     private val locationUpdateServiceListener = LocationServiceListener(
         application, Intent(
