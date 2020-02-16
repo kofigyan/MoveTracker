@@ -1,19 +1,24 @@
 package com.kofigyan.movetracker.api
 
 import android.app.Application
-import android.os.Looper
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.google.android.gms.location.*
+import androidx.lifecycle.Observer
+import androidx.lifecycle.asLiveData
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.kofigyan.movetracker.model.Location
 import com.kofigyan.movetracker.repository.TrackerRepository
-import com.kofigyan.movetracker.util.FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS
 import com.kofigyan.movetracker.util.SharedPreferencesUtil
-import com.kofigyan.movetracker.util.UPDATE_INTERVAL_IN_MILLISECONDS
+import com.kofigyan.movetracker.util.locationFlow
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -28,7 +33,6 @@ class FusedLocationApi @Inject constructor(
 ) : CoroutineScope {
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private lateinit var locationRequest: LocationRequest
 
     private val _locationUpdate: MutableLiveData<Location> = MutableLiveData()
     val locationUpdate: LiveData<Location>
@@ -47,69 +51,6 @@ class FusedLocationApi @Inject constructor(
 
         fusedLocationClient =
             LocationServices.getFusedLocationProviderClient(application.applicationContext)
-
-        locationRequest = LocationRequest.create().apply {
-            interval = UPDATE_INTERVAL_IN_MILLISECONDS
-            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-            fastestInterval = FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS
-            smallestDisplacement = 1F
-        }
-
-    }
-
-    fun startLocationUpdate() {
-
-        try {
-            fusedLocationClient.requestLocationUpdates(
-                locationRequest, locationCallback,
-                Looper.myLooper()
-            )
-            sharedPreferencesUtil.setLocationTrackingState(true)
-        } catch (unlikely: SecurityException) {
-            sharedPreferencesUtil.setLocationTrackingState(false)
-            error("Error when registerLocationUpdates()")
-        }
-    }
-
-    fun stopLocationUpdate() {
-        try {
-            fusedLocationClient.removeLocationUpdates(locationCallback)
-            sharedPreferencesUtil.setLocationTrackingState(false)
-        } catch (unlikely: SecurityException) {
-            sharedPreferencesUtil.setLocationTrackingState(true)
-            error("Error when unregisterLocationUpdated()")
-        }
-    }
-
-
-    private var locationCallback = object : LocationCallback() {
-        override fun onLocationResult(locationResult: LocationResult?) {
-            super.onLocationResult(locationResult)
-
-            val location = locationResult?.lastLocation
-            val eventLocationId = sharedPreferencesUtil.getLocationEventId()
-
-            if (location != null && eventLocationId != null) {
-                val newLocation = Location(
-                    UUID.randomUUID().toString(),
-                    eventLocationId,
-                    location.longitude,
-                    location.latitude
-                )
-
-                _locationUpdate.postValue(newLocation)
-
-                launch {
-                    repository.insertLocation(
-                        newLocation
-                    )
-                }
-
-
-            }
-
-
-        }
     }
 
 
@@ -117,5 +58,39 @@ class FusedLocationApi @Inject constructor(
         coroutineJob.cancel()
     }
 
+    fun startLocationUpdate(owner: LifecycleOwner) {
+        fusedLocationClient.locationFlow()
+            .conflate()
+            .catch { e ->
+                Timber.e("FuseLocationApi: %s", e.message)
+            }
+            .asLiveData()
+            .observe(owner, Observer { location ->
+                saveAndUpdateLocation(location)
+            })
+    }
+
+
+    private fun saveAndUpdateLocation(location: android.location.Location) {
+        val eventLocationId = sharedPreferencesUtil.getLocationEventId()
+
+        eventLocationId?.let {
+            val newLocation = Location(
+                UUID.randomUUID().toString(),
+                it,
+                location.longitude,
+                location.latitude
+            )
+
+            _locationUpdate.postValue(newLocation)
+
+            launch {
+                repository.insertLocation(
+                    newLocation
+                )
+            }
+
+        }
+    }
 
 }

@@ -66,6 +66,9 @@ dependencies {
     implementation "com.jakewharton.threetenabp:threetenabp:$jakewharton_threetenabp_version"
     implementation "androidx.multidex:multidex:$multidex_version"
 
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
+
     testImplementation "junit:junit:$junit_version"
     androidTestImplementation "androidx.test.ext:junit:$test_junit_version"
     androidTestImplementation "androidx.test.espresso:espresso-core:$test_espresso_version"

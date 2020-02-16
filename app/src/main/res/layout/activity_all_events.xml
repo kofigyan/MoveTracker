@@ -5,7 +5,7 @@
 
     <data>
 
-        <import type="com.kofigyan.movetracker.model.Status" />
+        <import type="com.kofigyan.movetracker.model.ViewState" />
 
         <variable
             name="viewmodel"
@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:text="@string/no_event_info"
             android:textSize="35sp"
-            app:visibleGone="@{viewmodel.status == Status.EMPTY}"
+            app:visibleGone="@{viewmodel.viewState == ViewState.EMPTY}"
             android:layout_marginStart="@dimen/default_text_margin"
             android:layout_marginTop="@dimen/default_text_margin"
             android:layout_marginEnd="@dimen/default_text_margin"

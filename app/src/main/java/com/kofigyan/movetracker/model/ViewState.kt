@@ -1,6 +1,6 @@
 package com.kofigyan.movetracker.model
 
-enum class Status {
+enum class ViewState {
     LOADED,
     EMPTY,
     LOADING

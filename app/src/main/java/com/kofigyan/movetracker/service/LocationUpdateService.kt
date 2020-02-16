@@ -99,13 +99,12 @@ class LocationUpdateService : LifecycleService() {
     private fun registerForLocationTracking() {
         if (permissionIsGranted && gpsIsEnabled) {
             sharedPreferencesUtil.setLocationTrackingState(true)
-            fusedLocationClientApi.startLocationUpdate()
-        }
+             fusedLocationClientApi.startLocationUpdate(this)
+         }
     }
 
     private fun unregisterFromLocationTracking() {
-        fusedLocationClientApi.stopLocationUpdate()
-        fusedLocationClientApi.cancelCoroutine()
+         fusedLocationClientApi.cancelCoroutine()
     }
 
     private fun startObservingGpsAndPermissionStatus() = gpsAndPermissionStatusLiveData
