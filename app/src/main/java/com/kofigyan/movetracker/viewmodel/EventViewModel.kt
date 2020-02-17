@@ -17,13 +17,13 @@ class EventViewModel @Inject constructor(
         repository.allEventsWithLocations
 
 
-    val viewState: LiveData<ViewState> = Transformations.map(allEventsWithLocations) { eventLocations: List<EventWithLocations> ->
-        eventLocations.let {
-            when(it.size) {
+    val viewState: LiveData<ViewState> =
+        Transformations.map(allEventsWithLocations) { eventLocations: List<EventWithLocations> ->
+            when (eventLocations.size) {
                 0 -> ViewState.EMPTY
                 else -> ViewState.LOADED
             }
+
         }
-    }
 
 }
