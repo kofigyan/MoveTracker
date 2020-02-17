@@ -1,25 +1,24 @@
 package com.kofigyan.movetracker.service
 
-import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
-import com.kofigyan.movetracker.ui.MainActivity
 import com.kofigyan.movetracker.R
 import com.kofigyan.movetracker.api.FusedLocationApi
+import com.kofigyan.movetracker.ui.MainActivity
 import com.kofigyan.movetracker.util.*
 import dagger.android.AndroidInjection
 import javax.inject.Inject
 
 class LocationUpdateService : LifecycleService() {
 
-    private lateinit var notificationsUtil: NotificationsUtil
+    @Inject
+    lateinit var notificationsUtil: NotificationsUtil
 
     @Inject
     lateinit var sharedPreferencesUtil: SharedPreferencesUtil
@@ -74,11 +73,6 @@ class LocationUpdateService : LifecycleService() {
         AndroidInjection.inject(this)
         super.onCreate()
 
-        notificationsUtil = NotificationsUtil(
-            applicationContext,
-            applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        )
-
         fusedLocationClientApi.setup()
 
         gpsAndPermissionStatusLiveData = with(application) {
@@ -99,12 +93,12 @@ class LocationUpdateService : LifecycleService() {
     private fun registerForLocationTracking() {
         if (permissionIsGranted && gpsIsEnabled) {
             sharedPreferencesUtil.setLocationTrackingState(true)
-             fusedLocationClientApi.startLocationUpdate(this)
-         }
+            fusedLocationClientApi.startLocationUpdate(this)
+        }
     }
 
     private fun unregisterFromLocationTracking() {
-         fusedLocationClientApi.cancelCoroutine()
+        fusedLocationClientApi.cancelCoroutine()
     }
 
     private fun startObservingGpsAndPermissionStatus() = gpsAndPermissionStatusLiveData

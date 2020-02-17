@@ -1,24 +1,16 @@
 package com.kofigyan.movetracker.util
 
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
-import android.app.Service
-import android.content.Context
+import android.app.*
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import com.kofigyan.movetracker.R
-
-const val ONGOING_NOTIFICATION_ID = 1
-const val ALERT_PERMISSION_NOTIFICATION_ID = 2
-const val ALERT_GPS_NOTIFICATION_ID = 3
-const val NOTIFICATION_CHANNEL_NAME = "All"
-const val NOTIFICATION_CHANNEL_ONGOING_ID = "com.kofigyan.movetracker.ongoing"
-const val NOTIFICATION_CHANNEL_ALERTS_ID = "com.kofigyan.movetracker.alerts"
+import javax.inject.Inject
+import javax.inject.Singleton
 
 
-class NotificationsUtil(
-    private val context: Context,
+@Singleton
+class NotificationsUtil @Inject constructor(
+    private val application: Application,
     private val notificationManager: NotificationManager
 ) {
 
@@ -37,7 +29,7 @@ class NotificationsUtil(
         createOngoingNotificationChannel()
         service.startForeground(
             ONGOING_NOTIFICATION_ID,
-            NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ONGOING_ID)
+            NotificationCompat.Builder(application.applicationContext , NOTIFICATION_CHANNEL_ONGOING_ID)
                 .setContentTitle(title)
                 .setOngoing(true)
                 .setContentText(text)
@@ -51,7 +43,7 @@ class NotificationsUtil(
 
     fun createAlertNotification(id: Int, title: String, text: String,
                                 pendingIntent: PendingIntent? = null) {
-        val notificationBuilder = NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ALERTS_ID)
+        val notificationBuilder = NotificationCompat.Builder(application.applicationContext, NOTIFICATION_CHANNEL_ALERTS_ID)
             .setContentTitle(title)
             .setAutoCancel(true)
             .setContentText(text)

@@ -1,17 +1,20 @@
 package com.kofigyan.movetracker.di
 
 import android.app.Application
+import android.app.NotificationManager
+import android.content.Context
 import androidx.room.Room
 import com.kofigyan.movetracker.api.SyncService
+import com.kofigyan.movetracker.db.TrackerRoomDatabase
 import com.kofigyan.movetracker.db.dao.EventDao
 import com.kofigyan.movetracker.db.dao.LocationDao
-import com.kofigyan.movetracker.db.TrackerRoomDatabase
 import com.kofigyan.movetracker.util.LiveDataCallAdapterFactory
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
+
 
 @Module(includes = arrayOf(ViewModelModule::class))
 class AppModule {
@@ -47,6 +50,14 @@ class AppModule {
     @Provides
     fun provideLocationDao(db: TrackerRoomDatabase): LocationDao {
         return db.locationDao()
+    }
+
+    @Singleton
+    @Provides
+    fun provideNotificationManager(app: Application): NotificationManager {
+        return app.getSystemService(
+            Context.NOTIFICATION_SERVICE
+        ) as NotificationManager
     }
 
 }

@@ -1,8 +1,6 @@
 package com.kofigyan.movetracker.repository
 
 import android.app.Application
-import android.app.NotificationManager
-import android.content.Context
 import android.content.Intent
 import androidx.lifecycle.LiveData
 import com.kofigyan.movetracker.db.dao.EventDao
@@ -23,7 +21,8 @@ class TrackerRepository @Inject constructor(
     application: Application,
     private val eventDao: EventDao,
     private val locationDao: LocationDao,
-    private val sharedPreferencesUtil: SharedPreferencesUtil
+    private val sharedPreferencesUtil: SharedPreferencesUtil,
+    private val notificationsUtil: NotificationsUtil
 ) {
 
     val allEventsWithLocations: LiveData<List<EventWithLocations>> =
@@ -56,13 +55,6 @@ class TrackerRepository @Inject constructor(
             application,
             LocationSyncService::class.java
         )
-    )
-
-
-    private val notificationsUtil = NotificationsUtil(
-        application, application.getSystemService(
-            Context.NOTIFICATION_SERVICE
-        ) as NotificationManager
     )
 
     fun stopLocationTracking() {

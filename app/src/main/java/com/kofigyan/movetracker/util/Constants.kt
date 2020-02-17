@@ -19,3 +19,12 @@ const val DEFAULT_WIDTH_STATIC_MAP = 100
 const val DEFAULT_HEIGHT_STATIC_MAP = 100
 const val DEFAULT_PATH_WEIGHT_STATIC_MAP = 3
 const val DEFAULT_PATH_COLOR = "0xff0000ff"
+
+
+// Notification
+const val ONGOING_NOTIFICATION_ID = 1
+const val ALERT_PERMISSION_NOTIFICATION_ID = 2
+const val ALERT_GPS_NOTIFICATION_ID = 3
+const val NOTIFICATION_CHANNEL_NAME = "All"
+const val NOTIFICATION_CHANNEL_ONGOING_ID = "com.kofigyan.movetracker.ongoing"
+const val NOTIFICATION_CHANNEL_ALERTS_ID = "com.kofigyan.movetracker.alerts"
