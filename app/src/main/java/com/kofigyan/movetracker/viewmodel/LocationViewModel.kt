@@ -1,9 +1,6 @@
 package com.kofigyan.movetracker.viewmodel
 
 import android.app.Application
-import android.app.NotificationManager
-import android.content.Context
-import android.content.Intent
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -12,10 +9,10 @@ import com.kofigyan.movetracker.api.FusedLocationApi
 import com.kofigyan.movetracker.model.Event
 import com.kofigyan.movetracker.model.Resource
 import com.kofigyan.movetracker.repository.TrackerRepository
-import com.kofigyan.movetracker.service.LocationServiceListener
-import com.kofigyan.movetracker.service.LocationSyncService
-import com.kofigyan.movetracker.service.LocationUpdateService
-import com.kofigyan.movetracker.util.*
+import com.kofigyan.movetracker.util.DialogMessage
+import com.kofigyan.movetracker.util.EventWrapper
+import com.kofigyan.movetracker.util.NonNullGpsStatusLiveData
+import com.kofigyan.movetracker.util.NonNullPermissionStatusLiveData
 import com.kofigyan.movetracker.viewmodel.base.BaseViewModel
 import kotlinx.coroutines.launch
 import org.threeten.bp.OffsetDateTime
@@ -24,8 +21,7 @@ import javax.inject.Inject
 class LocationViewModel @Inject constructor(
     application: Application,
     private val repository: TrackerRepository,
-    fusedLocationApi: FusedLocationApi,
-    private val sharedPreferencesUtil: SharedPreferencesUtil
+    fusedLocationApi: FusedLocationApi
 ) : BaseViewModel(application) {
 
 
@@ -43,25 +39,6 @@ class LocationViewModel @Inject constructor(
 
     val gpsStatusLiveData = NonNullGpsStatusLiveData(application)
 
-    private val locationUpdateServiceListener = LocationServiceListener(
-        application, Intent(
-            application,
-            LocationUpdateService::class.java
-        )
-    )
-
-    private val locationSyncServiceListener = LocationServiceListener(
-        application, Intent(
-            application,
-            LocationSyncService::class.java
-        )
-    )
-
-    private val notificationsUtil = NotificationsUtil(
-        application, application.getSystemService(
-            Context.NOTIFICATION_SERVICE
-        ) as NotificationManager
-    )
 
     private fun validateAndStoreEvent(event: Event, id: String) = viewModelScope.launch {
         val locations = repository.loadLocationsById(id)
@@ -81,38 +58,30 @@ class LocationViewModel @Inject constructor(
         )
     }
 
-    private fun stopLocationTracking() {
-        locationUpdateServiceListener.unsubscribe()
-        notificationsUtil.cancelAlertNotification()
-    }
-
-    private fun startLocationDataSyncing() = locationSyncServiceListener.subscribe()
-
+    private fun startLocationDataSyncing() = repository.locationSyncServiceListener.subscribe()
 
     private fun stopTracking() {
 
         _eventState.value = Resource.ended(R.string.event_text_start)
 
-        val locationEventId = sharedPreferencesUtil.getLocationEventId()
+        val locationEventId = repository.getLocationEventId()
         locationEventId?.let {
             validateAndStoreEvent(
                 Event(locationEventId, OffsetDateTime.now()), locationEventId
             )
         }
-        stopLocationTracking()
+        repository.stopLocationTracking()
     }
 
     private fun startTracking() {
         _eventState.value = Resource.started(R.string.event_text_stop)
-        locationUpdateServiceListener.subscribeForeground()
+        repository.locationUpdateServiceListener.subscribeForeground()
     }
 
     fun respondToTrackingAction() {
-        if (isTracking().not()) startTracking() else stopTracking()
+        if (repository.isTracking().not()) startTracking() else stopTracking()
     }
 
-    private fun isTracking() =
-        sharedPreferencesUtil.getLocationTrackingState() && sharedPreferencesUtil.getServiceRunningState()
 
     fun navigateToAllEventsActivity(itemId: String) {
         _navigateToAllEvents.value =
@@ -120,12 +89,12 @@ class LocationViewModel @Inject constructor(
     }
 
     private fun exitAppOkAction() {
-        stopLocationTracking()
+        repository.stopLocationTracking()
         exitAppDispatcher.value = R.string.event_text_stop
     }
 
     fun onExitAppButtonClicked() {
-        if (isTracking()) {
+        if (repository.isTracking()) {
             dialogMessageDispatcher.value = DialogMessage(
                 R.string.tracking_discard_title, R.string.tracking_discard_message,
                 action = ::exitAppOkAction
