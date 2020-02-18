@@ -14,6 +14,10 @@ import dagger.Provides
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.FusedLocationProviderClient
+
+
 
 
 @Module(includes = arrayOf(ViewModelModule::class))
@@ -58,6 +62,12 @@ class AppModule {
         return app.getSystemService(
             Context.NOTIFICATION_SERVICE
         ) as NotificationManager
+    }
+
+    @Provides
+    @Singleton
+    fun provideFusedLocationProviderClient(app: Application): FusedLocationProviderClient {
+        return LocationServices.getFusedLocationProviderClient(app.applicationContext)
     }
 
 }

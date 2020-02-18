@@ -29,10 +29,9 @@ import kotlin.coroutines.CoroutineContext
 class FusedLocationApi @Inject constructor(
     val application: Application,
     private val locationDao: LocationDao,
-    private val sharedPreferencesUtil: SharedPreferencesUtil
+    private val sharedPreferencesUtil: SharedPreferencesUtil,
+    private val fusedLocationClient: FusedLocationProviderClient
 ) : CoroutineScope {
-
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     private val _locationUpdate: MutableLiveData<Location> = MutableLiveData()
     val locationUpdate: LiveData<Location>
@@ -48,9 +47,6 @@ class FusedLocationApi @Inject constructor(
         coroutineJob = Job()
 
         sharedPreferencesUtil.setLocationEventId(UUID.randomUUID().toString())
-
-        fusedLocationClient =
-            LocationServices.getFusedLocationProviderClient(application.applicationContext)
     }
 
 
