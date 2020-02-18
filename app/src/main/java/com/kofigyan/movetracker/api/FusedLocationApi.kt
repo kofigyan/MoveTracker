@@ -1,23 +1,18 @@
 package com.kofigyan.movetracker.api
 
-import android.app.Application
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.asLiveData
 import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
 import com.kofigyan.movetracker.db.dao.LocationDao
 import com.kofigyan.movetracker.model.Location
 import com.kofigyan.movetracker.util.SharedPreferencesUtil
 import com.kofigyan.movetracker.util.locationFlow
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.conflate
-import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
@@ -27,7 +22,6 @@ import kotlin.coroutines.CoroutineContext
 
 @Singleton
 class FusedLocationApi @Inject constructor(
-    val application: Application,
     private val locationDao: LocationDao,
     private val sharedPreferencesUtil: SharedPreferencesUtil,
     private val fusedLocationClient: FusedLocationProviderClient
@@ -37,14 +31,18 @@ class FusedLocationApi @Inject constructor(
     val locationUpdate: LiveData<Location>
         get() = _locationUpdate
 
+    private val handler = CoroutineExceptionHandler { _, throwable ->
+
+    }
+
     lateinit var coroutineJob: Job
     override val coroutineContext: CoroutineContext
-        get() = Dispatchers.IO + coroutineJob
+        get() = Dispatchers.IO + handler + coroutineJob
 
 
     fun setup() {
 
-        coroutineJob = Job()
+        coroutineJob = SupervisorJob()
 
         sharedPreferencesUtil.setLocationEventId(UUID.randomUUID().toString())
     }

@@ -4,6 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.kofigyan.movetracker.model.EventWithLocations
+
+import com.kofigyan.movetracker.model.ViewState.NoData
+import com.kofigyan.movetracker.model.ViewState.HasData
 import com.kofigyan.movetracker.model.ViewState
 import com.kofigyan.movetracker.repository.EventRepository
 import javax.inject.Inject
@@ -20,8 +23,8 @@ class EventViewModel @Inject constructor(
     val viewState: LiveData<ViewState> =
         Transformations.map(allEventsWithLocations) { eventLocations: List<EventWithLocations> ->
             when (eventLocations.size) {
-                0 -> ViewState.EMPTY
-                else -> ViewState.LOADED
+                0 -> NoData
+                else -> HasData
             }
 
         }

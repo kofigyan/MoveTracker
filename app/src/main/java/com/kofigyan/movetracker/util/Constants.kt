@@ -28,3 +28,6 @@ const val ALERT_GPS_NOTIFICATION_ID = 3
 const val NOTIFICATION_CHANNEL_NAME = "All"
 const val NOTIFICATION_CHANNEL_ONGOING_ID = "com.kofigyan.movetracker.ongoing"
 const val NOTIFICATION_CHANNEL_ALERTS_ID = "com.kofigyan.movetracker.alerts"
+
+//SharedPreference
+const val PREF_FILE_NAME = "android_move_tracker_pref_file"

@@ -1,6 +1,7 @@
 package com.kofigyan.movetracker.util
 
 import android.app.*
+import android.content.Context
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import com.kofigyan.movetracker.R
@@ -10,7 +11,7 @@ import javax.inject.Singleton
 
 @Singleton
 class NotificationsUtil @Inject constructor(
-    private val application: Application,
+    private val context: Context,
     private val notificationManager: NotificationManager
 ) {
 
@@ -29,7 +30,7 @@ class NotificationsUtil @Inject constructor(
         createOngoingNotificationChannel()
         service.startForeground(
             ONGOING_NOTIFICATION_ID,
-            NotificationCompat.Builder(application.applicationContext , NOTIFICATION_CHANNEL_ONGOING_ID)
+            NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ONGOING_ID)
                 .setContentTitle(title)
                 .setOngoing(true)
                 .setContentText(text)
@@ -43,7 +44,7 @@ class NotificationsUtil @Inject constructor(
 
     fun createAlertNotification(id: Int, title: String, text: String,
                                 pendingIntent: PendingIntent? = null) {
-        val notificationBuilder = NotificationCompat.Builder(application.applicationContext, NOTIFICATION_CHANNEL_ALERTS_ID)
+        val notificationBuilder = NotificationCompat.Builder(context , NOTIFICATION_CHANNEL_ALERTS_ID)
             .setContentTitle(title)
             .setAutoCancel(true)
             .setContentText(text)
