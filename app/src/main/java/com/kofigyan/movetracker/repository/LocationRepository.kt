@@ -2,12 +2,8 @@ package com.kofigyan.movetracker.repository
 
 import android.app.Application
 import android.content.Intent
-import androidx.lifecycle.LiveData
-import com.kofigyan.movetracker.db.dao.EventDao
+import com.kofigyan.movetracker.api.FusedLocationApi
 import com.kofigyan.movetracker.db.dao.LocationDao
-import com.kofigyan.movetracker.model.Event
-import com.kofigyan.movetracker.model.EventWithLocations
-import com.kofigyan.movetracker.model.Location
 import com.kofigyan.movetracker.service.LocationServiceListener
 import com.kofigyan.movetracker.service.LocationSyncService
 import com.kofigyan.movetracker.service.LocationUpdateService
@@ -17,23 +13,15 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class TrackerRepository @Inject constructor(
+class LocationRepository @Inject constructor(
     application: Application,
-    private val eventDao: EventDao,
     private val locationDao: LocationDao,
     private val sharedPreferencesUtil: SharedPreferencesUtil,
-    private val notificationsUtil: NotificationsUtil
+    private val notificationsUtil: NotificationsUtil,
+    fusedLocationApi: FusedLocationApi
 ) {
 
-    val allEventsWithLocations: LiveData<List<EventWithLocations>> =
-        eventDao.getEventsWithLocations()
-
-
-    suspend fun insertEvent(event: Event) = eventDao.insert(event)
-
-
-    suspend fun insertLocation(location: Location) = locationDao.insert(location)
-
+    val locationUpdate = fusedLocationApi.locationUpdate
 
     suspend fun loadLocationsById(eventCreatorId: String) =
         locationDao.loadLocationsById(eventCreatorId)

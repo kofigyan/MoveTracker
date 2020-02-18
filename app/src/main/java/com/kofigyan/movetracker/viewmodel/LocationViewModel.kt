@@ -5,10 +5,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.kofigyan.movetracker.R
-import com.kofigyan.movetracker.api.FusedLocationApi
 import com.kofigyan.movetracker.model.Event
 import com.kofigyan.movetracker.model.Resource
-import com.kofigyan.movetracker.repository.TrackerRepository
+import com.kofigyan.movetracker.repository.EventRepository
+import com.kofigyan.movetracker.repository.LocationRepository
 import com.kofigyan.movetracker.util.DialogMessage
 import com.kofigyan.movetracker.util.EventWrapper
 import com.kofigyan.movetracker.util.NonNullGpsStatusLiveData
@@ -20,8 +20,8 @@ import javax.inject.Inject
 
 class LocationViewModel @Inject constructor(
     application: Application,
-    private val repository: TrackerRepository,
-    fusedLocationApi: FusedLocationApi
+    private val locationRepository: LocationRepository,
+    private val eventRepository: EventRepository
 ) : BaseViewModel(application) {
 
 
@@ -33,7 +33,7 @@ class LocationViewModel @Inject constructor(
         _eventState.value = Resource.ready(R.string.event_text_start)
     }
 
-    val locationUpdate = fusedLocationApi.locationUpdate
+    val locationUpdate = locationRepository.locationUpdate
 
     val permissionStatusLiveData = NonNullPermissionStatusLiveData(application)
 
@@ -41,9 +41,9 @@ class LocationViewModel @Inject constructor(
 
 
     private fun validateAndStoreEvent(event: Event, id: String) = viewModelScope.launch {
-        val locations = repository.loadLocationsById(id)
+        val locations = locationRepository.loadLocationsById(id)
         if (locations.size > 1) {
-            repository.insertEvent(event)
+            eventRepository.insertEvent(event)
             dispatchSyncDataDialog()
         } else motionStateMessageDispatcher.value = R.string.msg_still_motion_state
     }
@@ -58,28 +58,29 @@ class LocationViewModel @Inject constructor(
         )
     }
 
-    private fun startLocationDataSyncing() = repository.locationSyncServiceListener.subscribe()
+    private fun startLocationDataSyncing() =
+        locationRepository.locationSyncServiceListener.subscribe()
 
     private fun stopTracking() {
 
         _eventState.value = Resource.ended(R.string.event_text_start)
 
-        val locationEventId = repository.getLocationEventId()
+        val locationEventId = locationRepository.getLocationEventId()
         locationEventId?.let {
             validateAndStoreEvent(
                 Event(locationEventId, OffsetDateTime.now()), locationEventId
             )
         }
-        repository.stopLocationTracking()
+        locationRepository.stopLocationTracking()
     }
 
     private fun startTracking() {
         _eventState.value = Resource.started(R.string.event_text_stop)
-        repository.locationUpdateServiceListener.subscribeForeground()
+        locationRepository.locationUpdateServiceListener.subscribeForeground()
     }
 
     fun respondToTrackingAction() {
-        if (repository.isTracking().not()) startTracking() else stopTracking()
+        if (locationRepository.isTracking().not()) startTracking() else stopTracking()
     }
 
 
@@ -89,12 +90,12 @@ class LocationViewModel @Inject constructor(
     }
 
     private fun exitAppOkAction() {
-        repository.stopLocationTracking()
+        locationRepository.stopLocationTracking()
         exitAppDispatcher.value = R.string.event_text_stop
     }
 
     fun onExitAppButtonClicked() {
-        if (repository.isTracking()) {
+        if (locationRepository.isTracking()) {
             dialogMessageDispatcher.value = DialogMessage(
                 R.string.tracking_discard_title, R.string.tracking_discard_message,
                 action = ::exitAppOkAction

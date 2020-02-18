@@ -8,8 +8,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.asLiveData
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.kofigyan.movetracker.db.dao.LocationDao
 import com.kofigyan.movetracker.model.Location
-import com.kofigyan.movetracker.repository.TrackerRepository
 import com.kofigyan.movetracker.util.SharedPreferencesUtil
 import com.kofigyan.movetracker.util.locationFlow
 import kotlinx.coroutines.CoroutineScope
@@ -28,7 +28,7 @@ import kotlin.coroutines.CoroutineContext
 @Singleton
 class FusedLocationApi @Inject constructor(
     val application: Application,
-    private val repository: TrackerRepository,
+    private val locationDao: LocationDao,
     private val sharedPreferencesUtil: SharedPreferencesUtil
 ) : CoroutineScope {
 
@@ -85,7 +85,7 @@ class FusedLocationApi @Inject constructor(
             _locationUpdate.postValue(newLocation)
 
             launch {
-                repository.insertLocation(
+                locationDao.insert(
                     newLocation
                 )
             }

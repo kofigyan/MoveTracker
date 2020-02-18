@@ -5,16 +5,16 @@ import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.kofigyan.movetracker.model.EventWithLocations
 import com.kofigyan.movetracker.model.ViewState
-import com.kofigyan.movetracker.repository.TrackerRepository
+import com.kofigyan.movetracker.repository.EventRepository
 import javax.inject.Inject
 
 class EventViewModel @Inject constructor(
-    repository: TrackerRepository
+    eventRepository: EventRepository
 ) : ViewModel() {
 
 
     val allEventsWithLocations: LiveData<List<EventWithLocations>> =
-        repository.allEventsWithLocations
+        eventRepository.allEventsWithLocations
 
 
     val viewState: LiveData<ViewState> =
