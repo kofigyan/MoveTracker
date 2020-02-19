@@ -10,5 +10,5 @@ sealed class ViewState{
 
     object NoData : ViewState()
 
-    class Error(@StringRes val errorMsg: Int) : ViewState()
+   data class Error(@StringRes val errorMsg: Int) : ViewState()
 }
