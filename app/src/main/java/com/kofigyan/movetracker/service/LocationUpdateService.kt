@@ -97,9 +97,6 @@ class LocationUpdateService : LifecycleService() {
         }
     }
 
-    private fun unregisterFromLocationTracking() {
-        fusedLocationClientApi.cancelCoroutine()
-    }
 
     private fun startObservingGpsAndPermissionStatus() = gpsAndPermissionStatusLiveData
         .observe(this, pairObserver)
@@ -169,7 +166,6 @@ class LocationUpdateService : LifecycleService() {
 
         sharedPreferencesUtil.setServiceRunningState(false)
 
-        if (eitherPermissionOrGpsIsDisabled().not()) unregisterFromLocationTracking()
     }
 
 
