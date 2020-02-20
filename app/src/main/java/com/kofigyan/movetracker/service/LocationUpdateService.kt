@@ -73,7 +73,7 @@ class LocationUpdateService : LifecycleService() {
         AndroidInjection.inject(this)
         super.onCreate()
 
-        fusedLocationClientApi.setup()
+        fusedLocationClientApi.setLocationsEventId()
 
         gpsAndPermissionStatusLiveData = with(application) {
             PermissionStatusLiveData(this).combineLatestWith(GpsStatusLiveData(this))

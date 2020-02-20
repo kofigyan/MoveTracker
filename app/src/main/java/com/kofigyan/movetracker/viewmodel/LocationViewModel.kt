@@ -25,6 +25,12 @@ class LocationViewModel @Inject constructor(
 ) : BaseViewModel(application) {
 
 
+    val locationUpdate = locationRepository.locationUpdate
+
+    val permissionStatusLiveData = NonNullPermissionStatusLiveData(application)
+
+    val gpsStatusLiveData = NonNullGpsStatusLiveData(application)
+
     private val _eventState: MutableLiveData<Resource<String>> = MutableLiveData()
     val eventState: LiveData<Resource<String>>
         get() = _eventState
@@ -32,12 +38,6 @@ class LocationViewModel @Inject constructor(
     init {
         _eventState.value = Resource.ready(R.string.event_text_start)
     }
-
-    val locationUpdate = locationRepository.locationUpdate
-
-    val permissionStatusLiveData = NonNullPermissionStatusLiveData(application)
-
-    val gpsStatusLiveData = NonNullGpsStatusLiveData(application)
 
 
     private fun validateAndStoreEvent(event: Event, id: String) = viewModelScope.launch {
@@ -58,13 +58,10 @@ class LocationViewModel @Inject constructor(
         )
     }
 
-    private fun startLocationDataSyncing() =
-        locationRepository.locationSyncServiceListener.subscribe()
+    private fun startLocationDataSyncing() = locationRepository.locationSyncServiceListener.subscribe()
 
     private fun stopTracking() {
-
         _eventState.value = Resource.ended(R.string.event_text_start)
-
         val locationEventId = locationRepository.getLocationEventId()
         locationEventId?.let {
             validateAndStoreEvent(
@@ -79,10 +76,7 @@ class LocationViewModel @Inject constructor(
         locationRepository.locationUpdateServiceListener.subscribeForeground()
     }
 
-    fun respondToTrackingAction() {
-        if (locationRepository.isTracking().not()) startTracking() else stopTracking()
-    }
-
+    fun respondToTrackingAction() = if (locationRepository.isTracking().not()) startTracking() else stopTracking()
 
     fun navigateToAllEventsActivity(itemId: String) {
         _navigateToAllEvents.value =

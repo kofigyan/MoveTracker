@@ -31,10 +31,7 @@ class FusedLocationApi @Inject constructor(
         get() = _locationUpdate
 
 
-    fun setup() {
-        sharedPreferencesUtil.setLocationEventId(UUID.randomUUID().toString())
-    }
-
+    fun setLocationsEventId() = sharedPreferencesUtil.setLocationEventId(UUID.randomUUID().toString())
 
     fun startLocationUpdate(owner: LifecycleOwner) {
         fusedLocationClient.locationFlow()
@@ -47,7 +44,6 @@ class FusedLocationApi @Inject constructor(
                 saveAndUpdateLocation(location,owner)
             })
     }
-
 
     private fun saveAndUpdateLocation(location: android.location.Location, owner: LifecycleOwner) {
         val eventLocationId = sharedPreferencesUtil.getLocationEventId()
