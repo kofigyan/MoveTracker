@@ -11,6 +11,15 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import com.kofigyan.movetracker.R
 
+/**
+ *  Tying GpsStatusChange Listener to LiveData
+ *  every change is broadcasted via postValue
+ *
+ *  Additionally when LiveData is Active we register gps
+ *  Listener(These allow observing changes only if Activity (or any other LifecycleOwner)
+ *  is in started or resumed) to avoid memory leaks & Null pionter exceptions
+ *  when LiveData is inActive we unregister gps Listener
+ */
 open class GpsStatusLiveData(private val context: Context) : LiveData<GpsStatus>() {
 
     override fun onActive() {

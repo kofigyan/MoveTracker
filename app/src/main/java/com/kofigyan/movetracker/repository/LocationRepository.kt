@@ -27,9 +27,9 @@ class LocationRepository @Inject constructor(
         locationDao.loadLocationsById(eventCreatorId)
 
     fun isTracking() =
-        sharedPreferencesUtil.getLocationTrackingState() && sharedPreferencesUtil.getServiceRunningState()
+        sharedPreferencesUtil.locationTrackingState && sharedPreferencesUtil.serviceRunningState
 
-    fun getLocationEventId() = sharedPreferencesUtil.getLocationEventId()
+    fun getLocationEventId() = sharedPreferencesUtil.locationEventId
 
     val locationUpdateServiceListener = LocationServiceListener(
         application, Intent(

@@ -4,7 +4,9 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import kotlinx.coroutines.*
 
-
+/**
+ *  Scope aware lifecycle observer
+ */
 class LiveScope(val block: suspend CoroutineScope.() -> Unit) : DefaultLifecycleObserver {
 
     private var scope: CoroutineScope? = null

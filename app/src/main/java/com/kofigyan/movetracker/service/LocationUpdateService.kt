@@ -92,7 +92,7 @@ class LocationUpdateService : LifecycleService() {
 
     private fun registerForLocationTracking() {
         if (permissionIsGranted && gpsIsEnabled) {
-            sharedPreferencesUtil.setLocationTrackingState(true)
+            sharedPreferencesUtil.locationTrackingState = true
             fusedLocationClientApi.startLocationUpdate(this)
         }
     }
@@ -106,7 +106,7 @@ class LocationUpdateService : LifecycleService() {
 
         notificationsUtil.cancelAlertNotification()
 
-        sharedPreferencesUtil.setServiceRunningState(true)
+        sharedPreferencesUtil.serviceRunningState = true
 
         Intent(this, MainActivity::class.java)
             .let { PendingIntent.getActivity(this, 0, it, 0) }
@@ -164,7 +164,7 @@ class LocationUpdateService : LifecycleService() {
     override fun onDestroy() {
         super.onDestroy()
 
-        sharedPreferencesUtil.setServiceRunningState(false)
+        sharedPreferencesUtil.serviceRunningState = false
 
     }
 
