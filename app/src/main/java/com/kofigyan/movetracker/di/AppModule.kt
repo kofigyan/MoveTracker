@@ -5,6 +5,7 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.room.Room
+import androidx.work.WorkManager
 import com.kofigyan.movetracker.api.SyncService
 import com.kofigyan.movetracker.db.TrackerRoomDatabase
 import com.kofigyan.movetracker.db.dao.EventDao
@@ -83,6 +84,13 @@ class AppModule {
             Context.MODE_PRIVATE
         )
     }
+
+    @Singleton
+    @Provides
+    fun provideWorkManager(app: Application): WorkManager {
+        return WorkManager.getInstance(app)
+    }
+
 
 
 }

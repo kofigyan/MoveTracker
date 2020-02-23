@@ -11,23 +11,17 @@ class LocationServiceListener(
 ) : LocationSubscription {
 
 
-    override fun subscribe() {
-        context.startService(serviceIntent)
-    }
-
     @TargetApi(Build.VERSION_CODES.O)
-    override fun subscribeForeground() {
+    override fun subscribe() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             context.startForegroundService(serviceIntent)
         } else {
-            subscribe()
+            context.startService(serviceIntent)
         }
     }
-
 
     override fun unsubscribe() {
         context.stopService(serviceIntent)
     }
-
 
 }

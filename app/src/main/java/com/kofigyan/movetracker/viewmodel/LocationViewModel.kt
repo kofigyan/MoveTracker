@@ -58,7 +58,8 @@ class LocationViewModel @Inject constructor(
         )
     }
 
-    private fun startLocationDataSyncing() = locationRepository.locationSyncServiceListener.subscribe()
+    private fun startLocationDataSyncing() = locationRepository.syncLocationData()
+
 
     private fun stopTracking() {
         _eventState.value = Resource.ended(R.string.event_text_start)
@@ -73,10 +74,11 @@ class LocationViewModel @Inject constructor(
 
     private fun startTracking() {
         _eventState.value = Resource.started(R.string.event_text_stop)
-        locationRepository.locationUpdateServiceListener.subscribeForeground()
+        locationRepository.locationUpdateServiceListener.subscribe()
     }
 
-    fun respondToTrackingAction() = if (locationRepository.isTracking().not()) startTracking() else stopTracking()
+    fun respondToTrackingAction() =
+        if (locationRepository.isTracking().not()) startTracking() else stopTracking()
 
     fun navigateToAllEventsActivity(itemId: String) {
         _navigateToAllEvents.value =

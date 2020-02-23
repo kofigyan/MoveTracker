@@ -2,10 +2,12 @@ package com.kofigyan.movetracker.repository
 
 import android.app.Application
 import android.content.Intent
+import androidx.work.OneTimeWorkRequest
+import androidx.work.WorkManager
 import com.kofigyan.movetracker.api.FusedLocationApi
 import com.kofigyan.movetracker.db.dao.LocationDao
 import com.kofigyan.movetracker.service.LocationServiceListener
-import com.kofigyan.movetracker.service.LocationSyncService
+import com.kofigyan.movetracker.service.LocationSyncWorker
 import com.kofigyan.movetracker.service.LocationUpdateService
 import com.kofigyan.movetracker.util.NotificationsUtil
 import com.kofigyan.movetracker.util.SharedPreferencesUtil
@@ -18,7 +20,8 @@ class LocationRepository @Inject constructor(
     private val locationDao: LocationDao,
     private val sharedPreferencesUtil: SharedPreferencesUtil,
     private val notificationsUtil: NotificationsUtil,
-    fusedLocationApi: FusedLocationApi
+    fusedLocationApi: FusedLocationApi,
+    private val workManager: WorkManager
 ) {
 
     val locationUpdate = fusedLocationApi.locationUpdate
@@ -38,16 +41,13 @@ class LocationRepository @Inject constructor(
         )
     )
 
-    val locationSyncServiceListener = LocationServiceListener(
-        application, Intent(
-            application,
-            LocationSyncService::class.java
-        )
-    )
-
     fun stopLocationTracking() {
         locationUpdateServiceListener.unsubscribe()
         notificationsUtil.cancelAlertNotification()
+    }
+
+    fun syncLocationData() {
+        workManager.enqueue(OneTimeWorkRequest.from(LocationSyncWorker::class.java))
     }
 
 

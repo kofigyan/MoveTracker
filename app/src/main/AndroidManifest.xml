@@ -37,16 +37,6 @@
 
         <service android:name=".service.LocationUpdateService" />
 
-        <service android:name=".service.LocationSyncService"/>
-
-        <receiver
-            android:name=".service.LocationSyncService$SyncOnConnectionAvailable"
-            android:enabled="false">
-            <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-            </intent-filter>
-        </receiver>
-
     </application>
 
 </manifest>
