@@ -14,7 +14,7 @@ class SharedPreferencesUtil @Inject constructor(private val pref: SharedPreferen
     var serviceRunningState: Boolean by pref.boolean(KEY_SERVICE_RUNNING_STATE)
     var locationEventId: String? by pref.string(KEY_LOCATION_EVENT_ID, "")
 
-    fun SharedPreferences.boolean(
+    private fun SharedPreferences.boolean(
         key: String,
         defaultValue: Boolean = false
     ): ReadWriteProperty<Any, Boolean> =
@@ -26,7 +26,7 @@ class SharedPreferencesUtil @Inject constructor(private val pref: SharedPreferen
             setter = SharedPreferences.Editor::putBoolean
         )
 
-    fun SharedPreferences.string(
+   private fun SharedPreferences.string(
         key: String,
         defaultValue: String = ""
     ): PreferenceProperty<String?> =
