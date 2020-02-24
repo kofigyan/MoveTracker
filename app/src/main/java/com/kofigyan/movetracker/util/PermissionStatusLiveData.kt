@@ -7,10 +7,7 @@ import androidx.core.app.ActivityCompat
 import androidx.lifecycle.LiveData
 import com.kofigyan.movetracker.R
 
-/** Tying the checking of permission status to LiveData.
- *  This allows us to publish(broadcast permission status)
- *  when LiveData is Active
- */
+
 open class PermissionStatusLiveData(private val context: Context) : LiveData<PermissionStatus>() {
 
     override fun onActive() {
