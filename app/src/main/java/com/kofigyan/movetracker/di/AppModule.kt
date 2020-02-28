@@ -6,19 +6,18 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.room.Room
 import androidx.work.WorkManager
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.kofigyan.movetracker.api.SyncService
 import com.kofigyan.movetracker.db.TrackerRoomDatabase
 import com.kofigyan.movetracker.db.dao.EventDao
 import com.kofigyan.movetracker.db.dao.LocationDao
-import com.kofigyan.movetracker.util.LiveDataCallAdapterFactory
+import com.kofigyan.movetracker.util.PREF_FILE_NAME
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.kofigyan.movetracker.util.PREF_FILE_NAME
 
 
 @Module(includes = arrayOf(ViewModelModule::class))
@@ -34,7 +33,6 @@ class AppModule {
     fun provideApiService(): SyncService {
         return Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create())
-            .addCallAdapterFactory(LiveDataCallAdapterFactory())
             .baseUrl("BASE URL")
             .build()
             .create(SyncService::class.java)
@@ -90,7 +88,6 @@ class AppModule {
     fun provideWorkManager(app: Application): WorkManager {
         return WorkManager.getInstance(app)
     }
-
 
 
 }

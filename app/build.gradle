@@ -66,6 +66,8 @@ dependencies {
     implementation "com.squareup.okhttp3:okhttp:$okhttp_version"
     implementation "com.squareup.okhttp3:okhttp-urlconnection:$okhttp_version"
     implementation "com.squareup.okhttp3:logging-interceptor:$okhttp_logging_version"
+    implementation "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:$coroutine_adapter_version"
+
 
     implementation "com.github.bumptech.glide:glide:$glide_version"
     implementation "androidx.recyclerview:recyclerview:$recyclerview_version"
