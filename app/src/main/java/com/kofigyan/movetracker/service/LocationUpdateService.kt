@@ -111,7 +111,7 @@ class LocationUpdateService : LifecycleService() {
         Intent(this, MainActivity::class.java)
             .let { PendingIntent.getActivity(this, 0, it, 0) }
             .let { pendingIntent ->
-                notificationsUtil.createOngoingNotification( 
+                notificationsUtil.createOngoingNotification(
                     this,
                     getString(R.string.notif_location_tracking_title),
                     getString(R.string.notif_in_progress),

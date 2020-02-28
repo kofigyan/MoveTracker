@@ -1,18 +1,18 @@
 package com.kofigyan.movetracker.service
 
 import android.content.Context
-import androidx.work.Worker
+import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import timber.log.Timber
 
 
-class LocationSyncWorker(ctx: Context, params: WorkerParameters) : Worker(ctx, params) {
+class LocationSyncWorker(ctx: Context, params: WorkerParameters) : CoroutineWorker(ctx, params) {
 
     //    @Inject
     //   lateinit var syncService: SyncService
 
 
-    override fun doWork(): Result {
+    override suspend fun doWork(): Result {
 
         return try {
 

@@ -10,7 +10,7 @@ interface EventDao {
 
     @Transaction
     @Query("SELECT * FROM Event")
-    fun getEventsWithLocations(): LiveData<List<EventWithLocations>>
+    suspend fun getEventsWithLocations():  List<EventWithLocations>
 
     @Insert
     suspend fun insert(event: Event)
