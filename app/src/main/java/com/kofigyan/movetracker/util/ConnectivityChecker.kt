@@ -14,10 +14,8 @@ class ConnectivityChecker(private val connectivityManager: ConnectivityManager) 
     private var monitoringConnectivity = false
 
     private var _connectedStatus = MutableLiveData<Boolean>()
-    private val connectedStatus: LiveData<Boolean>
+    val connectedStatus: LiveData<Boolean>
         get() = _connectedStatus
-
-
 
 
 }
