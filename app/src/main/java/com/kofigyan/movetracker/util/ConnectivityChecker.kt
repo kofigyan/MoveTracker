@@ -3,6 +3,8 @@ package com.kofigyan.movetracker.util
 
 import android.net.ConnectivityManager
 import android.net.Network
+import android.net.NetworkCapabilities
+import android.net.NetworkRequest
 import androidx.lifecycle.*
 
 
@@ -39,6 +41,22 @@ class ConnectivityChecker(private val connectivityManager: ConnectivityManager) 
     }
 
 
-           
+    @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
+    fun startMonitoringConnectivity() {
+        val activeNetworkInfo = connectivityManager.activeNetworkInfo
+        val connected = activeNetworkInfo != null && activeNetworkInfo.isConnected
+        _connectedStatus.postValue(connected)
+
+        if (!connected) {
+            // we don't have internet connection, so we listen to notification on network status
+            connectivityManager.registerNetworkCallback(
+                NetworkRequest.Builder().addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                    .build(),
+                connectivityCallback
+            )
+            monitoringConnectivity = true
+        }
+    }
+
 
 }
