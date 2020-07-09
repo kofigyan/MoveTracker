@@ -6,7 +6,14 @@ import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import androidx.lifecycle.*
-
+/**
+ * Lifecycle aware connectivity checker that exposes the network connected status via a LiveData.
+ *
+ *The loss of connectivity when the activity is resumed should be a blocker for the user
+ * (since we can't get feed items) - in onResume, we should get the connectivity status. If we
+ * are NOT connected then we register a listener and wait to be notified. Only once we are
+ * connected, we stop listening to connectivity.¬
+ */
 
 class ConnectivityChecker(private val connectivityManager: ConnectivityManager) :
     LifecycleObserver {
@@ -39,7 +46,6 @@ class ConnectivityChecker(private val connectivityManager: ConnectivityManager) 
             monitoringConnectivity = false
         }
     }
-
 
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
     fun startMonitoringConnectivity() {
