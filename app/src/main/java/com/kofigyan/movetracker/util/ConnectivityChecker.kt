@@ -18,4 +18,14 @@ class ConnectivityChecker(private val connectivityManager: ConnectivityManager) 
         get() = _connectedStatus
 
 
+    private val connectivityCallback = object: ConnectivityManager.NetworkCallback(){
+        override fun onAvailable(network: Network) {
+            super.onAvailable(network)
+        }
+
+        override fun onLost(network: Network) {
+            super.onLost(network)
+        }
+
+    }
 }
